@@ -1,21 +1,41 @@
-// un texto
-console.log("Prueba del enrutado")
+console.log("Cinematika")
 
+alert("Bienvenidos a nuestra página de Cinematika")
 
-//alert
-alert("Bienvenidos a mi página web")
+const nombrePelicula = prompt("¿Qué película viste con nosotros?")
 
-//prompt 
+let duracionPelicula1 = parseInt(
+    prompt("¿Cuántas horas duró esa película?"))
 
+let duracionPelicula2 = parseInt(
+    prompt("¿Cuántas horas duró la segunda película que viste?"))
 
-let cursos = prompt("Que cursos hiciste?")
-console.log("Cursos: " + cursos)
+console.log("Película seleccionada: " + nombrePelicula)
 
-let curso1 = parseInt(prompt("Cuantos meses duró el primer curso?"))
-console.log("Duró: " + curso1)
+let duracionTotal = duracionPelicula1 + duracionPelicula2
 
-let curso2 = parseInt(prompt("Cuantos meses duró el segundo curso?"))
-console.log("Duró: " + curso2)
+console.log("La duración total de las dos películas fue de " + duracionTotal + " horas")
 
-let resultado = curso1 + curso2
-console.log(resultado)
+const edadMinima = 18;
+
+let ingresa = true;
+
+while (ingresa === true) {
+
+    let edad = parseInt(prompt("Ingrese su edad"));
+
+    if (edad >= edadMinima) {
+
+        console.log("Es mayor de edad, puede ingresar a la película");
+
+    } else if (edad === 17) {
+
+        console.log("Tiene 17 años, no puede ingresar a la película");
+
+    } else {
+
+        console.log("Es menor de edad, no puede ingresar a la película");
+
+        ingresa = false;
+    }
+}
