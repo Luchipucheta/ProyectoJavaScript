@@ -2,40 +2,39 @@ console.log("Cinematika")
 
 alert("Bienvenidos a nuestra página de Cinematika")
 
-const nombrePelicula = prompt("¿Qué película viste con nosotros?")
-
-let duracionPelicula1 = parseInt(
-    prompt("¿Cuántas horas duró esa película?"))
-
-let duracionPelicula2 = parseInt(
-    prompt("¿Cuántas horas duró la segunda película que viste?"))
-
-console.log("Película seleccionada: " + nombrePelicula)
-
-let duracionTotal = duracionPelicula1 + duracionPelicula2
-
-console.log("La duración total de las dos películas fue de " + duracionTotal + " horas")
-
 const edadMinima = 18;
 
-let ingresa = true;
+let continuar = true;
 
-while (ingresa === true) {
+let duracionTotal = 0
 
-    let edad = parseInt(prompt("Ingrese su edad"));
+while (continuar === true) {
+    const nombrePelicula = prompt("¿Qué película viste con nosotros?")
+
+    let duracionPelicula = parseInt(prompt("¿Cuántas horas duró esa película?"))
+
+    let edad = parseInt(prompt("Ingrese su edad"))
+    console.log("Pelicula seleccionada: " + nombrePelicula)
+
+    duracionTotal = duracionTotal + duracionPelicula
+    console.log("Duracion total: " + duracionTotal + " horas")
 
     if (edad >= edadMinima) {
-
-        console.log("Es mayor de edad, puede ingresar a la película");
-
+        console.log("Es mayor de edad, puede ingresar a la película")
     } else if (edad === 17) {
-
-        console.log("Tiene 17 años, no puede ingresar a la película");
-
+        console.log("Tiene 17 años, no puede ingresar a la película")
     } else {
+        console.log("Es menor de edad, no puede ingresar a la película")
+    }
 
-        console.log("Es menor de edad, no puede ingresar a la película");
-
-        ingresa = false;
+    let otraPelicula = prompt("Queres cargar otra pelicula?").toLowerCase()
+    if (otraPelicula === "no") {
+        continuar = false
     }
 }
+
+
+
+
+
+
