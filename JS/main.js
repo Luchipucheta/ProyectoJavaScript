@@ -8,7 +8,14 @@ let continuar = true;
 
 let duracionTotal = 0
 
+function mostrarPelicula(nombrePelicula, duracionPelicula) {
+    console.log("Película seleccionada: " + nombrePelicula);
+    console.log("Duración: " + duracionPelicula + " horas");
+}
+
 while (continuar === true) {
+    mostrarPelicula(nombrePelicula, duracionPelicula);
+    
     const nombrePelicula = prompt("¿Qué película viste con nosotros?")
 
     let duracionPelicula = parseInt(prompt("¿Cuántas horas duró esa película?"))
