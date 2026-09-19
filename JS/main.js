@@ -13,18 +13,27 @@ function mostrarPelicula(nombrePelicula, duracionPelicula) {
     console.log("Duración: " + duracionPelicula + " horas");
 }
 
+function calcularDuracionTotal(duracionTotal, duracionPelicula) {
+    return duracionTotal + duracionPelicula
+}
+
+const mostrarDuracionTotal = (duracionTotal) => {
+    console.log("Duración total: " + duracionTotal + " horas")
+}
+
 while (continuar === true) {
-    mostrarPelicula(nombrePelicula, duracionPelicula);
-    
+
     const nombrePelicula = prompt("¿Qué película viste con nosotros?")
 
     let duracionPelicula = parseInt(prompt("¿Cuántas horas duró esa película?"))
 
-    let edad = parseInt(prompt("Ingrese su edad"))
-    console.log("Pelicula seleccionada: " + nombrePelicula)
+    mostrarPelicula(nombrePelicula, duracionPelicula);
 
-    duracionTotal = duracionTotal + duracionPelicula
-    console.log("Duracion total: " + duracionTotal + " horas")
+    duracionTotal = calcularDuracionTotal(duracionTotal, duracionPelicula)
+
+    mostrarDuracionTotal(duracionTotal)
+
+    let edad = parseInt(prompt("Ingrese su edad"))
 
     if (edad >= edadMinima) {
         console.log("Es mayor de edad, puede ingresar a la película")
