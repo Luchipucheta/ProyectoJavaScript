@@ -29,6 +29,14 @@ const mostrarDuracionTotal = (duracionTotal) => {
     console.log("Duración total: " + duracionTotal + " horas")
 }
 
+function mostrarPeliculas(peliculas) {
+
+    for (const pelicula of peliculas) {
+        console.log("🎬 " + pelicula)
+    }
+
+}
+
 while (continuar === true) {
 
     const nombrePelicula = prompt("¿Qué película viste con nosotros?")
@@ -84,9 +92,11 @@ if (peliculasCinematika.includes(peliculaBuscada)) {
 
 }
 
-peliculasCinematika.splice(2, 1, "Avengers: Endgames");
+peliculasCinematika.splice(2, 1, "Avengers: Endgames")
 
 console.log("Se reemplazó la película de la posición 2.")
+
+mostrarPeliculas(peliculasCinematika)
 
 
 
