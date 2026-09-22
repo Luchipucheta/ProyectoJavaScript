@@ -17,8 +17,8 @@ const peliculasCinematika = [
 ]
 
 function mostrarPelicula(nombrePelicula, duracionPelicula) {
-    console.log("Película seleccionada: " + nombrePelicula);
-    console.log("Duración: " + duracionPelicula + " horas");
+    console.log("Película seleccionada: " + nombrePelicula)
+    console.log("Duración: " + duracionPelicula + " horas")
 }
 
 function calcularDuracionTotal(duracionTotal, duracionPelicula) {
@@ -37,7 +37,7 @@ while (continuar === true) {
 
     peliculasCinematika.push(nombrePelicula)
 
-    mostrarPelicula(nombrePelicula, duracionPelicula);
+    mostrarPelicula(nombrePelicula, duracionPelicula)
 
     duracionTotal = calcularDuracionTotal(duracionTotal, duracionPelicula)
 
@@ -58,6 +58,35 @@ while (continuar === true) {
         continuar = false
     }
 }
+
+let peliculaEliminada = peliculasCinematika.pop()
+
+console.log("Se eliminó la película: " + peliculaEliminada)
+
+peliculasCinematika.unshift("Jurassic Park")
+
+console.log("Se agregó Jurassic Park al inicio de la lista.")
+
+let peliculaBuscada = prompt(
+    "¿Qué película querés buscar en Cinematika?"
+);
+
+if (peliculasCinematika.includes(peliculaBuscada)) {
+
+    let posicion = peliculasCinematika.indexOf(peliculaBuscada)
+
+    console.log("La película está disponible.")
+    console.log("Se encuentra en la posición: " + posicion)
+
+} else {
+
+    console.log("La película no está disponible.")
+
+}
+
+peliculasCinematika.splice(2, 1, "Avengers: Endgames");
+
+console.log("Se reemplazó la película de la posición 2.")
 
 
 
