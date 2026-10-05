@@ -8,12 +8,44 @@ let continuar = true;
 
 let duracionTotal = 0
 
-const peliculasCinematika = [
+class Pelicula {
+
+    constructor(id, nombre, duracion, genero) {
+
+        this.id = id
+        this.nombre = nombre
+        this.duracion = duracion
+        this.genero = genero
+
+    }
+
+}
+
+const pelicula1 = new Pelicula(
+    1,
     "Harry Potter",
+    3,
+    "Fantasía"
+)
+
+const pelicula2 = new Pelicula(
+    2,
     "Duro de matar",
+    2,
+    "Acción"
+)
+
+const pelicula3 = new Pelicula(
+    3,
     "El Rey León",
-    "Juego de gemelas",
-    "Toy Story"
+    2,
+    "Animación"
+)
+
+const peliculasCinematika = [
+    pelicula1,
+    pelicula2,
+    pelicula3
 ]
 
 function mostrarPelicula(nombrePelicula, duracionPelicula) {
