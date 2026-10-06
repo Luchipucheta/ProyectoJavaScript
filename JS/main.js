@@ -8,17 +8,25 @@ let continuar = true;
 
 let duracionTotal = 0
 
+let proximoId = 4
+
 class Pelicula {
 
     constructor(id, nombre, duracion, genero) {
-
         this.id = id
         this.nombre = nombre
         this.duracion = duracion
         this.genero = genero
-
     }
-
+    mostrarInformacion() {
+        console.log(
+            "ID: " + this.id +
+            " | Película: " + this.nombre +
+            " | Duración: " + this.duracion +
+            " horas" +
+            " | Género: " + this.genero
+        )
+    }
 }
 
 const pelicula1 = new Pelicula(
@@ -64,72 +72,130 @@ const mostrarDuracionTotal = (duracionTotal) => {
 function mostrarPeliculas(peliculas) {
 
     for (const pelicula of peliculas) {
-        console.log("🎬 " + pelicula)
+        console.log(    
+            "🎬 " +
+            pelicula.nombre +
+            " - " +
+            pelicula.genero +
+            " - " +
+            pelicula.duracion +
+            " horas"
+        )
     }
-
 }
 
-while (continuar === true) {
+pelicula1.mostrarInformacion()
+pelicula2.mostrarInformacion()
+pelicula3.mostrarInformacion()
 
+while (continuar === true) {
     const nombrePelicula = prompt("¿Qué película viste con nosotros?")
 
     let duracionPelicula = parseInt(prompt("¿Cuántas horas duró esa película?"))
 
-    peliculasCinematika.push(nombrePelicula)
+    let generoPelicula = prompt("¿Qué género tiene la película?")
 
-    mostrarPelicula(nombrePelicula, duracionPelicula)
+    const nuevaPelicula = new Pelicula(
+        proximoId,
+        nombrePelicula,
+        duracionPelicula,
+        generoPelicula
+    )
 
-    duracionTotal = calcularDuracionTotal(duracionTotal, duracionPelicula)
+    peliculasCinematika.push(nuevaPelicula)
+
+    proximoId++
+
+    mostrarPelicula(
+        nombrePelicula,
+        duracionPelicula
+    )
+
+    duracionTotal = calcularDuracionTotal(
+        duracionTotal,
+        duracionPelicula
+    )
 
     mostrarDuracionTotal(duracionTotal)
 
-    let edad = parseInt(prompt("Ingrese su edad"))
+    let edad = parseInt(
+        prompt("Ingrese su edad")
+    )
 
     if (edad >= edadMinima) {
-        console.log("Es mayor de edad, puede ingresar a la película")
+        console.log(
+            "Es mayor de edad, puede ingresar a la película"
+        )
+
     } else if (edad === 17) {
-        console.log("Tiene 17 años, no puede ingresar a la película")
+        console.log(
+            "Tiene 17 años, no puede ingresar a la película"
+        )
+
     } else {
-        console.log("Es menor de edad, no puede ingresar a la película")
+        console.log(
+            "Es menor de edad, no puede ingresar a la película"
+        )
     }
 
-    let otraPelicula = prompt("Queres cargar otra pelicula?").toLowerCase()
+    let otraPelicula = prompt(
+        "¿Querés cargar otra película?"
+    ).toLowerCase()
+
     if (otraPelicula === "no") {
         continuar = false
     }
 }
 
 let peliculaEliminada = peliculasCinematika.pop()
+console.log("Se eliminó la película: " + peliculaEliminada.nombre)
 
-console.log("Se eliminó la película: " + peliculaEliminada)
+peliculasCinematika.unshift(
+    new Pelicula(
+        proximoId,
+        "Jurassic Park",
+        2,
+        "Aventura"
+    )
+)
 
-peliculasCinematika.unshift("Jurassic Park")
+proximoId++
 
 console.log("Se agregó Jurassic Park al inicio de la lista.")
 
-let peliculaBuscada = prompt(
-    "¿Qué película querés buscar en Cinematika?"
-);
+let nombresPeliculas = peliculasCinematika.map(
+    pelicula => pelicula.nombre
+)
 
-if (peliculasCinematika.includes(peliculaBuscada)) {
+let peliculaBuscada = prompt("¿Qué película querés buscar en Cinematika?")
 
-    let posicion = peliculasCinematika.indexOf(peliculaBuscada)
+if (nombresPeliculas.includes(peliculaBuscada)) {
+
+    let posicion = nombresPeliculas.indexOf(peliculaBuscada)
 
     console.log("La película está disponible.")
     console.log("Se encuentra en la posición: " + posicion)
 
 } else {
-
     console.log("La película no está disponible.")
-
 }
 
-peliculasCinematika.splice(2, 1, "Avengers: Endgames")
+peliculasCinematika.splice(
+    2,
+    1,
+    new Pelicula(
+        proximoId,
+        "Avengers: Endgame",
+        3,
+        "Acción"
+    )
+)
+
+proximoId++
 
 console.log("Se reemplazó la película de la posición 2.")
 
 mostrarPeliculas(peliculasCinematika)
-
 
 
 
