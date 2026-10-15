@@ -61,7 +61,6 @@ const peliculasCinematika = [
     pelicula3
 ];
 
-// Prueba del método que modifica el estado del objeto
 console.log("ANTES de modificar la película:");
 pelicula1.mostrarInformacion();
 
@@ -183,6 +182,9 @@ proximoId++;
 
 console.log("Se agregó Jurassic Park al inicio de la lista.");
 
+console.log("Catálogo completo de Cinematika:");
+mostrarPeliculas(peliculasCinematika);
+
 let nombresPeliculas = peliculasCinematika.map(
     pelicula => pelicula.nombre
 );
@@ -196,6 +198,17 @@ if (nombresPeliculas.includes(peliculaBuscada)) {
 
     console.log("La película está disponible.");
     console.log("Se encuentra en la posición: " + posicion);
+
+    const peliculaEncontrada = peliculasCinematika.find(
+        pelicula =>
+            pelicula.nombre.toLowerCase() ===
+            peliculaBuscada.toLowerCase()
+    );
+
+    if (peliculaEncontrada) {
+        console.log("Información de la película encontrada:");
+        peliculaEncontrada.mostrarInformacion();
+    }
 } else {
     console.log("La película no está disponible.");
 }
@@ -215,9 +228,35 @@ proximoId++;
 
 console.log("Se reemplazó la película de la posición 2.");
 
-mostrarPeliculas(peliculasCinematika);
+const opcionFiltro = prompt(
+    "¿Querés ver las películas que duran 3 horas o más? Escribí si o no:"
+).toLowerCase();
 
+if (opcionFiltro === "si" || opcionFiltro === "sí") {
+    const peliculasLargas = peliculasCinematika.filter(
+        pelicula => pelicula.duracion >= 3
+    );
 
+    if (peliculasLargas.length > 0) {
+        console.log("Películas que duran 3 horas o más:");
+        mostrarPeliculas(peliculasLargas);
+    } else {
+        console.log("No hay películas que cumplan ese criterio.");
+    }
+}
+
+const opcionTitulos = prompt(
+    "¿Querés ver solamente los títulos de las películas? Escribí si o no:"
+).toLowerCase();
+
+if (opcionTitulos === "si" || opcionTitulos === "sí") {
+    const titulosPeliculas = peliculasCinematika.map(
+        pelicula => pelicula.nombre
+    );
+
+    console.log("Títulos de las películas de Cinematika:");
+    console.log(titulosPeliculas);
+}
 
 
 
