@@ -3,12 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- JS -->
+    <meta name="description" content="Cinematika: tu catálogo personal de películas.">
+    <title>Cinematika | Mi catálogo de películas</title>
+    <link rel="stylesheet" href="./CSS/style.css">
     <script defer src="./JS/main.js"></script>
-    <title>Cinematika</title>
 </head>
 <body>
-    <h1>Compra de entradas al cine</h1>
-    
+    <header class="encabezado">
+        <div class="logo">🎬</div>
+        <div>
+            <p class="sobre-titulo">TU CARTELERA PERSONAL</p>
+            <h1>Cinematika</h1>
+            <p class="subtitulo">Todas tus películas favoritas, en un solo lugar.</p>
+        </div>
+    </header>
+
+    <main class="contenedor">
+        <section class="panel">
+            <h2>Agregar una película</h2>
+            <p class="descripcion">Completá los datos para sumar una película a tu catálogo.</p>
+
+            <form id="formulario-pelicula">
+                <div class="campo">
+                    <label for="nombre">Nombre de la película</label>
+                    <input type="text" id="nombre" placeholder="Ej.: Interestelar" required>
+                </div>
+
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="duracion">Duración en horas</label>
+                        <input type="number" id="duracion" min="1" step="1" placeholder="Ej.: 2" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="genero">Género</label>
+                        <select id="genero" required>
+                            <option value="">Elegí un género</option>
+                            <option value="Acción">Acción</option>
+                            <option value="Animación">Animación</option>
+                            <option value="Aventura">Aventura</option>
+                            <option value="Ciencia ficción">Ciencia ficción</option>
+                            <option value="Comedia">Comedia</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Fantasía">Fantasía</option>
+                            <option value="Terror">Terror</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="boton-principal" type="submit">+ Agregar película</button>
+            </form>
+        </section>
+
+        <section class="seccion-catalogo">
+            <div class="catalogo-encabezado">
+                <div>
+                    <h2>Mi catálogo</h2>
+                    <p id="contador" class="descripcion">Películas disponibles</p>
+                </div>
+
+                <div class="campo buscador">
+                    <label for="buscador">Buscar por título</label>
+                    <input type="search" id="buscador" placeholder="Escribí una película...">
+                </div>
+            </div>
+
+            <p id="mensaje" class="mensaje" aria-live="polite"></p>
+            <div id="catalogo-peliculas" class="catalogo"></div>
+        </section>
+    </main>
+
+    <footer class="pie">
+        <p>© 2026 Cinematika · Tu pasión por el cine</p>
+    </footer>
 </body>
 </html>
