@@ -128,6 +128,7 @@ formulario.addEventListener("submit", (evento) => {
 
     peliculasCinematika.push(nuevaPelicula);
     proximoId++;
+    guardarPeliculas();
 
     formulario.reset();
     actualizarCatalogo();
@@ -160,8 +161,16 @@ catalogoPeliculas.addEventListener("click", (evento) => {
     peliculasCinematika = peliculasCinematika.filter(
         (pelicula) => pelicula.id !== idPelicula
     );
+    guardarPeliculas();
 
     actualizarCatalogo();
+
+    function guardarPeliculas() {
+    localStorage.setItem(
+        CLAVE_STORAGE,
+        JSON.stringify(peliculasCinematika)
+    );
+}
 
     mostrarMensaje(
         `La película "${peliculaEliminada.nombre}" se eliminó correctamente.`,
