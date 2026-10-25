@@ -11,13 +11,40 @@ class Pelicula {
     }
 }
 
-let proximoId = 4;
+const CLAVE_STORAGE = "cinematikaPeliculas";
 
-let peliculasCinematika = [
-    new Pelicula(1, "Harry Potter", 3, "Fantasía"),
-    new Pelicula(2, "Duro de matar", 2, "Acción"),
-    new Pelicula(3, "El Rey León", 2, "Animación")
-];
+const datosGuardados = JSON.parse(
+    localStorage.getItem(CLAVE_STORAGE) ?? "null"
+);
+
+let peliculasCinematika;
+
+if (Array.isArray(datosGuardados)) {
+    peliculasCinematika = datosGuardados.map((pelicula) =>
+        new Pelicula(
+            pelicula.id,
+            pelicula.nombre,
+            pelicula.duracion,
+            pelicula.genero
+        )
+    );
+} else {
+    peliculasCinematika = [
+        new Pelicula(1, "Harry Potter", 3, "Fantasía"),
+        new Pelicula(2, "Duro de matar", 2, "Acción"),
+        new Pelicula(3, "El Rey León", 2, "Animación")
+    ];
+
+    localStorage.setItem(
+        CLAVE_STORAGE,
+        JSON.stringify(peliculasCinematika)
+    );
+}
+
+let proximoId = peliculasCinematika.reduce(
+    (mayorId, pelicula) => Math.max(mayorId, pelicula.id),
+    0
+) + 1;
 
 const formulario = document.querySelector("#formulario-pelicula");
 const inputNombre = document.querySelector("#nombre");
@@ -35,7 +62,6 @@ function mostrarMensaje(texto, tipo) {
 
 function renderizarPeliculas(listaPeliculas) {
     catalogoPeliculas.innerHTML = "";
-
     contador.textContent = `${listaPeliculas.length} película(s)`;
 
     if (listaPeliculas.length === 0) {
@@ -51,7 +77,9 @@ function renderizarPeliculas(listaPeliculas) {
                 <div class="icono-pelicula">🎬</div>
                 <h3>${pelicula.nombre}</h3>
                 <span class="etiqueta-genero">${pelicula.genero}</span>
-                <p class="duracion">Duración: ${pelicula.duracion} horas</p>
+                <p class="duracion">
+                    Duración: ${pelicula.duracion} horas
+                </p>
                 <button
                     type="button"
                     class="boton-eliminar"
@@ -81,8 +109,13 @@ formulario.addEventListener("submit", (evento) => {
     const duracion = Number(inputDuracion.value);
     const genero = inputGenero.value;
 
-    if (nombre === "" || genero === "" || !Number.isInteger(duracion) || duracion <= 0) {
-        mostrarMensaje("Completá todos los campos con datos válidos.", "error");
+    if (
+        nombre === "" ||
+        genero === "" ||
+        !Number.isInteger(duracion) ||
+        duracion <= 0
+    ) {
+        mostrarMensaje("Completá todos los campos correctamente.", "error");
         return;
     }
 
@@ -99,14 +132,13 @@ formulario.addEventListener("submit", (evento) => {
     formulario.reset();
     actualizarCatalogo();
 
-    mostrarMensaje(`¡La película "${nombre}" se agregó correctamente!`, "exito");
-
-    inputNombre.focus();
+    mostrarMensaje(
+        `¡La película "${nombre}" se agregó correctamente!`,
+        "exito"
+    );
 });
 
-buscador.addEventListener("input", () => {
-    actualizarCatalogo();
-});
+buscador.addEventListener("input", actualizarCatalogo);
 
 catalogoPeliculas.addEventListener("click", (evento) => {
     const botonEliminar = evento.target.closest(".boton-eliminar");
