@@ -1,3 +1,4 @@
+
 class Pelicula {
     constructor(id, nombre, duracion, genero) {
         this.id = id;
@@ -13,32 +14,38 @@ class Pelicula {
 
 const CLAVE_STORAGE = "cinematikaPeliculas";
 
-const datosGuardados = JSON.parse(
-    localStorage.getItem(CLAVE_STORAGE) ?? "null"
-);
+let peliculasCinematika = [];
 
-let peliculasCinematika;
-
-if (Array.isArray(datosGuardados)) {
-    peliculasCinematika = datosGuardados.map((pelicula) =>
-        new Pelicula(
-            pelicula.id,
-            pelicula.nombre,
-            pelicula.duracion,
-            pelicula.genero
-        )
+try {
+    const datosGuardados = JSON.parse(
+        localStorage.getItem(CLAVE_STORAGE) ?? "null"
     );
-} else {
+
+    if (Array.isArray(datosGuardados)) {
+        peliculasCinematika = datosGuardados.map(
+            ({ id, nombre, duracion, genero }) =>
+                new Pelicula(id, nombre, duracion, genero)
+        );
+    } else {
+        peliculasCinematika = [
+            new Pelicula(1, "Harry Potter", 3, "Fantasía"),
+            new Pelicula(2, "Duro de matar", 2, "Acción"),
+            new Pelicula(3, "El Rey León", 2, "Animación")
+        ];
+
+        localStorage.setItem(
+            CLAVE_STORAGE,
+            JSON.stringify(peliculasCinematika)
+        );
+    }
+} catch (error) {
+    console.error("No se pudieron recuperar las películas:", error);
+
     peliculasCinematika = [
         new Pelicula(1, "Harry Potter", 3, "Fantasía"),
         new Pelicula(2, "Duro de matar", 2, "Acción"),
         new Pelicula(3, "El Rey León", 2, "Animación")
     ];
-
-    localStorage.setItem(
-        CLAVE_STORAGE,
-        JSON.stringify(peliculasCinematika)
-    );
 }
 
 let proximoId = peliculasCinematika.reduce(
@@ -54,6 +61,8 @@ const buscador = document.querySelector("#buscador");
 const catalogoPeliculas = document.querySelector("#catalogo-peliculas");
 const contador = document.querySelector("#contador");
 const mensaje = document.querySelector("#mensaje");
+const mensajeTemporizador = document.querySelector("#mensaje-temporizador");
+const estadoCarga = document.querySelector("#estado-carga");
 
 function mostrarMensaje(texto, tipo) {
     mensaje.textContent = texto;
@@ -65,6 +74,26 @@ function guardarPeliculas() {
         CLAVE_STORAGE,
         JSON.stringify(peliculasCinematika)
     );
+}
+
+function mostrarAvisoInicial() {
+    setTimeout(() => {
+        mensajeTemporizador.textContent =
+            "🔔 ¡Explorá tu catálogo y descubrí tu próxima película!";
+    }, 2500);
+}
+
+function obtenerPeliculas() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (!Array.isArray(peliculasCinematika)) {
+                reject(new Error("Los datos del catálogo no son válidos."));
+                return;
+            }
+
+            resolve(peliculasCinematika);
+        }, 1500);
+    });
 }
 
 function renderizarPeliculas(listaPeliculas) {
@@ -99,47 +128,83 @@ function actualizarCatalogo() {
     renderizarPeliculas(peliculasFiltradas);
 }
 
+async function cargarCatalogo() {
+    estadoCarga.textContent = "⏳ Cargando películas...";
+    formulario.querySelector("button[type='submit']").disabled = true;
+
+    try {
+        const peliculasCargadas = await obtenerPeliculas();
+
+        actualizarCatalogo();
+
+        estadoCarga.textContent =
+            `✔️ ${peliculasCargadas.length} películas cargadas correctamente.`;
+    } catch (error) {
+        console.error("Error al cargar el catálogo:", error);
+
+        estadoCarga.textContent =
+            "⚠️ No se pudo cargar el catálogo. Intentá de nuevo.";
+
+        mostrarMensaje(
+            "No se pudo procesar la operación, intentá de nuevo.",
+            "error"
+        );
+    } finally {
+        formulario.querySelector("button[type='submit']").disabled = false;
+        console.log("Finalizó el proceso de carga del catálogo.");
+    }
+}
+
 formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
 
-    const nombre = inputNombre.value.trim();
-    const duracion = Number(inputDuracion.value);
-    const genero = inputGenero.value;
+    try {
+        const nombre = inputNombre.value.trim();
+        const duracion = Number(inputDuracion.value);
+        const genero = inputGenero.value;
 
-    if (
-        nombre === "" ||
-        genero === "" ||
-        !Number.isInteger(duracion) ||
-        duracion <= 0
-    ) {
-        mostrarMensaje("Completá todos los campos correctamente.", "error");
-        return;
+        if (
+            nombre === "" ||
+            genero === "" ||
+            !Number.isInteger(duracion) ||
+            duracion <= 0
+        ) {
+            throw new Error("Los datos ingresados no son válidos.");
+        }
+
+        const nuevaPelicula = new Pelicula(
+            proximoId,
+            nombre,
+            duracion,
+            genero
+        );
+
+        peliculasCinematika.push(nuevaPelicula);
+        proximoId++;
+
+        guardarPeliculas();
+        formulario.reset();
+        actualizarCatalogo();
+
+        mostrarMensaje(
+            `¡La película "${nombre}" se agregó correctamente!`,
+            "exito"
+        );
+
+        inputNombre.focus();
+    } catch (error) {
+        console.error("Error al agregar la película:", error);
+
+        mostrarMensaje(
+            "No se pudo procesar la operación, intentá de nuevo.",
+            "error"
+        );
+    } finally {
+        console.log("Finalizó el intento de agregar una película.");
     }
-
-    const nuevaPelicula = new Pelicula(
-        proximoId,
-        nombre,
-        duracion,
-        genero
-    );
-
-    peliculasCinematika.push(nuevaPelicula);
-    proximoId++;
-
-    guardarPeliculas();
-    formulario.reset();
-    actualizarCatalogo();
-
-    mostrarMensaje(
-        `¡La película "${nombre}" se agregó correctamente!`,
-        "exito"
-    );
-    inputNombre.focus();
 });
 
-buscador.addEventListener("input", () => {
-    actualizarCatalogo();
-});
+buscador.addEventListener("input", actualizarCatalogo);
 
 catalogoPeliculas.addEventListener("click", (evento) => {
     const botonEliminar = evento.target.closest(".boton-eliminar");
@@ -148,27 +213,39 @@ catalogoPeliculas.addEventListener("click", (evento) => {
         return;
     }
 
-    const idPelicula = Number(botonEliminar.dataset.id);
+    try {
+        const idPelicula = Number(botonEliminar.dataset.id);
 
-    const peliculaEliminada = peliculasCinematika.find(
-        (pelicula) => pelicula.id === idPelicula
-    );
+        const peliculaEliminada = peliculasCinematika.find(
+            (pelicula) => pelicula.id === idPelicula
+        );
 
-    if (!peliculaEliminada) {
-        return;
+        if (!peliculaEliminada) {
+            throw new Error("No se encontró la película seleccionada.");
+        }
+
+        peliculasCinematika = peliculasCinematika.filter(
+            (pelicula) => pelicula.id !== idPelicula
+        );
+
+        guardarPeliculas();
+        actualizarCatalogo();
+
+        mostrarMensaje(
+            `La película "${peliculaEliminada.nombre}" se eliminó correctamente.`,
+            "exito"
+        );
+    } catch (error) {
+        console.error("Error al eliminar la película:", error);
+
+        mostrarMensaje(
+            "No se pudo procesar la operación, intentá de nuevo.",
+            "error"
+        );
+    } finally {
+        console.log("Finalizó el intento de eliminar una película.");
     }
-
-    peliculasCinematika = peliculasCinematika.filter(
-        (pelicula) => pelicula.id !== idPelicula
-    );
-
-    guardarPeliculas();
-    actualizarCatalogo();
-
-     mostrarMensaje(
-        `La película "${peliculaEliminada.nombre}" se eliminó correctamente.`,
-        "exito"
-    );
 });
 
-actualizarCatalogo();
+mostrarAvisoInicial();
+cargarCatalogo();
