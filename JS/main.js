@@ -60,43 +60,40 @@ function mostrarMensaje(texto, tipo) {
     mensaje.className = `mensaje ${tipo}`;
 }
 
+function guardarPeliculas() {
+    localStorage.setItem(
+        CLAVE_STORAGE,
+        JSON.stringify(peliculasCinematika)
+    );
+}
+
 function renderizarPeliculas(listaPeliculas) {
-    catalogoPeliculas.innerHTML = "";
     contador.textContent = `${listaPeliculas.length} película(s)`;
 
-    if (listaPeliculas.length === 0) {
-        catalogoPeliculas.innerHTML = `
-            <p class="vacio">No hay películas para mostrar.</p>
-        `;
-        return;
-    }
-
-    for (const pelicula of listaPeliculas) {
-        catalogoPeliculas.innerHTML += `
+    catalogoPeliculas.innerHTML = listaPeliculas.length === 0
+        ? `<p class="vacio">No hay películas para mostrar.</p>`
+        : listaPeliculas.map(({ id, nombre, duracion, genero }) => `
             <article class="tarjeta-pelicula">
                 <div class="icono-pelicula">🎬</div>
-                <h3>${pelicula.nombre}</h3>
-                <span class="etiqueta-genero">${pelicula.genero}</span>
-                <p class="duracion">
-                    Duración: ${pelicula.duracion} horas
-                </p>
+                <h3>${nombre}</h3>
+                <span class="etiqueta-genero">${genero}</span>
+                <p class="duracion">Duración: ${duracion} horas</p>
                 <button
                     type="button"
                     class="boton-eliminar"
-                    data-id="${pelicula.id}"
+                    data-id="${id}"
                 >
                     Eliminar película
                 </button>
             </article>
-        `;
-    }
+        `).join("");
 }
 
 function actualizarCatalogo() {
     const textoBuscado = buscador.value.trim().toLowerCase();
 
     const peliculasFiltradas = peliculasCinematika.filter((pelicula) =>
-        pelicula.nombre.toLowerCase().includes(textoBuscado)
+        (pelicula.nombre?.toLowerCase() ?? "").includes(textoBuscado)
     );
 
     renderizarPeliculas(peliculasFiltradas);
@@ -128,8 +125,8 @@ formulario.addEventListener("submit", (evento) => {
 
     peliculasCinematika.push(nuevaPelicula);
     proximoId++;
-    guardarPeliculas();
 
+    guardarPeliculas();
     formulario.reset();
     actualizarCatalogo();
 
@@ -137,9 +134,12 @@ formulario.addEventListener("submit", (evento) => {
         `¡La película "${nombre}" se agregó correctamente!`,
         "exito"
     );
+    inputNombre.focus();
 });
 
-buscador.addEventListener("input", actualizarCatalogo);
+buscador.addEventListener("input", () => {
+    actualizarCatalogo();
+});
 
 catalogoPeliculas.addEventListener("click", (evento) => {
     const botonEliminar = evento.target.closest(".boton-eliminar");
@@ -161,21 +161,14 @@ catalogoPeliculas.addEventListener("click", (evento) => {
     peliculasCinematika = peliculasCinematika.filter(
         (pelicula) => pelicula.id !== idPelicula
     );
-    guardarPeliculas();
 
+    guardarPeliculas();
     actualizarCatalogo();
 
-    function guardarPeliculas() {
-    localStorage.setItem(
-        CLAVE_STORAGE,
-        JSON.stringify(peliculasCinematika)
-    );
-}
-
-    mostrarMensaje(
+     mostrarMensaje(
         `La película "${peliculaEliminada.nombre}" se eliminó correctamente.`,
         "exito"
     );
 });
 
-renderizarPeliculas(peliculasCinematika);
+actualizarCatalogo();
